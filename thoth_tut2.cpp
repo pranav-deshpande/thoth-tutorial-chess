@@ -22,8 +22,6 @@ along with Thoth Tutorial Chess. If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include <utility>
 
-using namespace std;
-
 #define BLANK 0
 #define WHITE 1
 #define BLACK 2
@@ -48,6 +46,25 @@ int init_pos[8][8] = {
 
 std::string enum_to_piece[13] = {"--", "WP", "WN", "WB", "WR", "WQ", "WK", "BP", "BN", "BB", "BR", "BQ", "BK"};
 
+class move {
+public:
+    std::pair<int, int> init_pos;
+    std::pair<int, int> final_pos;
+    int captured_piece;
+    
+    move(std::pair<int, int> init_pos, std::pair<int, int> final_pos, int captured_piece) {
+        this->init_pos = init_pos;
+        this->final_pos = final_pos;
+        this->captured_piece = captured_piece;
+    }
+    
+    move(std::pair<int, int> init_pos, std::pair<int, int> final_pos) {
+        this->init_pos = init_pos;
+        this->final_pos = final_pos;
+        this->captured_piece = BL;
+    }
+};
+
 class chessboard {
 private:
     int board[8][8];
@@ -59,8 +76,16 @@ private:
         return BLACK;
     }
     
+    int opposite_side() {
+        return side_to_play == WHITE ? BLACK : WHITE;
+    }
+    
     bool is_square_in_range(int row, int col) {
         return (row < 8 && row >= 0 && col < 8 && col >= 0);
+    }
+    
+    bool is_slider(int piece) {
+        return piece == WQ || piece == BQ || piece == WR || piece == BR || piece == WB || piece == BB;
     }
 public:
     chessboard() {
@@ -88,30 +113,130 @@ public:
         std::cout << "Side to play: " << (side_to_play == WHITE ? "WHITE" : "BLACK") << "\n\n";
     }
     
-    void generate_all_moves() {
-        std::vector <std::pair<std::pair<int, int>, std::pair<int, int> > > movelist;
+    auto generate_all_moves() {
+        std::vector <move> movelist;
         
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
                 int curr_piece = board[i][j];
                 if(get_piece_side(curr_piece) == side_to_play) {
-                    for(int var = 0; var < 7; var++) {
-                        int new_i = i + var;
-                        int new_j = j + var;
-                        int new_piece = board[new_i][new_j];
-                        if(get_piece_side(new_piece) != side_to_play) {
-                            movelist.push_back({{i, j}, {new_i, new_j}});
+                    
+                    // Set up some data for sliders
+                    int slider_start_i = -i;
+                    int slider_start_j = -j;
+                    int slider_end_i = 7 - i;
+                    int slider_end_j = 7 - j;
+                    
+                    // Now slide the piece in all directions
+                    int var_i;
+                    int var_j;
+                    int next_piece;
+                    
+                    if(is_slider(curr_piece) && curr_piece != WR && curr_piece != BR) {
+                        var_i = slider_start_i;
+                        var_j = slider_start_j;
+                        while(var_i < i && var_j < j) {
+                            next_piece = board[var_i][var_j];
+                            var_i = i + var_i;
+                            var_j = j + var_j;
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_i++;
+                                var_j++;
+                            } else {
+                                break;
+                            }                           
+                        }
+                        
+                        var_i = slider_end_i;
+                        var_j = slider_end_j;
+                        while(var_i < 7 && var_j < 7) {
+                            next_piece = board[var_i][var_j];
+                            var_i = i + var_i;
+                            var_j = j + var_j;
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_i++;
+                                var_j++;
+                            } else {
+                                break;
+                            }                           
+                        }
+                    }
+                    
+                    if(is_slider(curr_piece) && curr_piece != WB && curr_piece != BB) {
+                        var_i = slider_start_i;
+                        var_j = slider_end_j;
+                        while(var_i < i && var_j < 7) {
+                            next_piece = board[var_i][var_j];
+                            var_i = i + var_i;
+                            var_j = j + var_j;
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_i++;
+                                var_j++;
+                            } else {
+                                break;
+                            };                           
+                        }
+                        
+                        var_i = slider_end_i;
+                        var_j = slider_start_j;
+                        while(var_i < 7 && var_j < j) {
+                            next_piece = board[var_i][var_j];
+                            var_i = i + var_i;
+                            var_j = j + var_j;
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_i++;
+                                var_j++;
+                            } else {
+                                break;
+                            }                           
                         }
                     }
                 }
             }
         }
+        
+        return movelist;
+    }
+    
+    void make_move(move m) {
+        board[m.init_pos.first][m.init_pos.second] = BLANK;
+        board[m.final_pos.first][m.final_pos.second] = board[m.init_pos.first][m.init_pos.second];
+    }
+    
+    void undo_move(move m) {
+        board[m.init_pos.first][m.init_pos.second] = board[m.final_pos.first][m.final_pos.second];
+        board[m.final_pos.first][m.final_pos.second] = m.captured_piece;
     }
 };
 
 int main() {
-	chessboard board;
-	
-	board.init();
-	board.print();
+    chessboard board;
+    
+    board.init();
+    board.print();
+    std::vector<move> movelist = board.generate_all_moves();
+    std::cout << movelist.size() << std::endl;
+
+    board.make_move(movelist[0]);
+    board.print();
 }
