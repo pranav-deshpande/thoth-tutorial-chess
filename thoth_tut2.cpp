@@ -289,7 +289,7 @@ int main() {
     board.init();
     board.print();
     std::vector<move> movelist = board.generate_all_moves();
-    std::cout << "Total possible moves: " << movelist.size() << std::endl;
+    std::cout << "Total possible moves: " << movelist.size() << "\n\n";
     
     for(auto m : movelist) {
         board.make_move(m);
