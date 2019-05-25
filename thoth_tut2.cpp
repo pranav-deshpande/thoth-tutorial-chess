@@ -44,6 +44,17 @@ int init_pos[8][8] = {
     {WR, WN, WB, WQ, WK, WB, WN, WR}
 };
 
+int modded_init_pos[8][8] = { 
+    {BR, BN, BB, BQ, BK, BB, BN, BR},
+    {BP, BP, BP, BP, BP, BP, BP, BP},
+    {BL, BL, BL, BL, BL, BL, BL, BL},
+    {BL, BL, BL, BL, BL, BL, BL, BL},
+    {BL, BL, BL, BL, BL, BL, BL, BL},
+    {BL, BL, BL, BL, BL, BL, BL, BL},
+    {WP, WP, WP, BL, WP, WP, WP, WP},
+    {WR, WN, WB, WQ, WK, WB, WN, WR}
+};
+
 std::string enum_to_piece[13] = {"--", "WP", "WN", "WB", "WR", "WQ", "WK", "BP", "BN", "BB", "BR", "BQ", "BK"};
 
 class move {
@@ -95,7 +106,7 @@ public:
     void init() {
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
-                board[i][j] = init_pos[i][j];
+                board[i][j] = modded_init_pos[i][j];
             }
         }
         side_to_play = WHITE;
@@ -120,25 +131,16 @@ public:
             for(int j = 0; j < 8; j++) {
                 int curr_piece = board[i][j];
                 if(get_piece_side(curr_piece) == side_to_play) {
-                    
-                    // Set up some data for sliders
-                    int slider_start_i = -i;
-                    int slider_start_j = -j;
-                    int slider_end_i = 7 - i;
-                    int slider_end_j = 7 - j;
-                    
                     // Now slide the piece in all directions
                     int var_i;
                     int var_j;
                     int next_piece;
-                    
+
+                    // Lots of diagonal moves now!! -> in all 4 directions
                     if(is_slider(curr_piece) && curr_piece != WR && curr_piece != BR) {
-                        var_i = slider_start_i;
-                        var_j = slider_start_j;
-                        while(var_i < i && var_j < j) {
-                            next_piece = board[var_i][var_j];
-                            var_i = i + var_i;
-                            var_j = j + var_j;
+                        var_i = i + 1;
+                        var_j = j + 1;
+                        while(is_square_in_range(var_i, var_j)) {
                             next_piece = board[var_i][var_j];
                             if(get_piece_side(next_piece) == opposite_side()) {
                               movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
@@ -152,12 +154,24 @@ public:
                             }                           
                         }
                         
-                        var_i = slider_end_i;
-                        var_j = slider_end_j;
-                        while(var_i < 7 && var_j < 7) {
+                        var_i = i - 1;
+                        var_j = j - 1;
+                        while(is_square_in_range(var_i, var_j)) {
                             next_piece = board[var_i][var_j];
-                            var_i = i + var_i;
-                            var_j = j + var_j;
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_i--;
+                                var_j--;
+                            } else {
+                                break;
+                            }                           
+                        }
+                        var_i = i + 1;
+                        var_j = j - 1;
+                        while(is_square_in_range(var_i, var_j)) {
                             next_piece = board[var_i][var_j];
                             if(get_piece_side(next_piece) == opposite_side()) {
                               movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
@@ -165,6 +179,22 @@ public:
                             } else if(get_piece_side(next_piece) == BLANK) {
                                 movelist.push_back(move({i, j}, {var_i, var_j}));
                                 var_i++;
+                                var_j--;
+                            } else {
+                                break;
+                            }                           
+                        }
+                        
+                        var_i = i - 1;
+                        var_j = j + 1;
+                        while(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_i--;
                                 var_j++;
                             } else {
                                 break;
@@ -172,32 +202,40 @@ public:
                         }
                     }
                     
+                    // Straight moves in all 4 directions
                     if(is_slider(curr_piece) && curr_piece != WB && curr_piece != BB) {
-                        var_i = slider_start_i;
-                        var_j = slider_end_j;
-                        while(var_i < i && var_j < 7) {
-                            next_piece = board[var_i][var_j];
-                            var_i = i + var_i;
-                            var_j = j + var_j;
+                        var_i = i;
+                        var_j = j + 1;
+                        while(is_square_in_range(var_i, var_j)) {
                             next_piece = board[var_i][var_j];
                             if(get_piece_side(next_piece) == opposite_side()) {
                               movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
                               break;
                             } else if(get_piece_side(next_piece) == BLANK) {
                                 movelist.push_back(move({i, j}, {var_i, var_j}));
-                                var_i++;
                                 var_j++;
                             } else {
                                 break;
-                            };                           
+                            }                           
                         }
                         
-                        var_i = slider_end_i;
-                        var_j = slider_start_j;
-                        while(var_i < 7 && var_j < j) {
+                        var_i = i;
+                        var_j = j - 1;
+                        while(is_square_in_range(var_i, var_j)) {
                             next_piece = board[var_i][var_j];
-                            var_i = i + var_i;
-                            var_j = j + var_j;
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_j--;
+                            } else {
+                                break;
+                            }                           
+                        }
+                        var_i = i + 1;
+                        var_j = j;
+                        while(is_square_in_range(var_i, var_j)) {
                             next_piece = board[var_i][var_j];
                             if(get_piece_side(next_piece) == opposite_side()) {
                               movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
@@ -205,7 +243,21 @@ public:
                             } else if(get_piece_side(next_piece) == BLANK) {
                                 movelist.push_back(move({i, j}, {var_i, var_j}));
                                 var_i++;
-                                var_j++;
+                            } else {
+                                break;
+                            }                           
+                        }
+                        
+                        var_i = i - 1;
+                        var_j = j;
+                        while(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_i--;
                             } else {
                                 break;
                             }                           
@@ -219,13 +271,15 @@ public:
     }
     
     void make_move(move m) {
+        board[m.final_pos.first][m.final_pos.second] = board[m.init_pos.first][m.init_pos.second];          
         board[m.init_pos.first][m.init_pos.second] = BLANK;
-        board[m.final_pos.first][m.final_pos.second] = board[m.init_pos.first][m.init_pos.second];
+        side_to_play = (side_to_play == WHITE ? BLACK : WHITE);
     }
     
     void undo_move(move m) {
         board[m.init_pos.first][m.init_pos.second] = board[m.final_pos.first][m.final_pos.second];
         board[m.final_pos.first][m.final_pos.second] = m.captured_piece;
+        side_to_play = (side_to_play == WHITE ? BLACK : WHITE);
     }
 };
 
@@ -236,7 +290,12 @@ int main() {
     board.print();
     std::vector<move> movelist = board.generate_all_moves();
     std::cout << movelist.size() << std::endl;
+    
+    for(auto m : movelist) {
+        board.make_move(m);
+        board.print();
+        board.undo_move(m);
+    }
 
-    board.make_move(movelist[0]);
     board.print();
 }
