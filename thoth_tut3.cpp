@@ -302,6 +302,24 @@ public:
                         
                         // Diagonal captures
                         // Note that we have to take care of pawn promotions as well
+                        var_i = i + increment_sign;
+                        var_j = j + 1;
+                        if(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));    
+                            }
+                        }
+                        
+                        var_i = i + increment_sign;
+                        var_j = j - 1;
+                        if(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));    
+                            }
+                        }
+    
                     }
                 }
             }
