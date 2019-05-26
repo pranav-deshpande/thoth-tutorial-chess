@@ -274,7 +274,34 @@ public:
                                 }
                             }
                         }
+                    }
+                    
+                    if(curr_piece == WP || curr_piece == BP) {
+                        int increment_sign = (side_to_play == WHITE ? -1 : 1);
                         
+                        // Move the pawns 1 square ahead
+                        // Note that we have to take care of pawn promotion as well
+                        var_i = i + increment_sign;
+                        var_j = j;
+                        if(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(next_piece == BL) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                            }
+                        }
+                        
+                        // Move the pawns 2 squares ahead if the conditions are satisfied
+                        var_i = i + increment_sign * 2;
+                        var_j = j;
+                        if((i == 6 && curr_piece == WP) || (i == 1 && curr_piece == BP)) {
+                            next_piece = board[var_i][var_j];
+                            if(next_piece == BL) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                            }
+                        }
+                        
+                        // Diagonal captures
+                        // Note that we have to take care of pawn promotions as well
                     }
                 }
             }
