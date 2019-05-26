@@ -19,11 +19,12 @@ along with Thoth Tutorial Chess. If not, see <http://www.gnu.org/licenses/>.
 
 #include <iostream>
 #include <string>
+#include <vector>
+#include <utility>
 
-using namespace std;
-
-#define WHITE 0
-#define BLACK 1
+#define BLANK 0
+#define WHITE 1
+#define BLACK 2
 
 enum {
     BL = 0,
@@ -45,10 +46,47 @@ int init_pos[8][8] = {
 
 std::string enum_to_piece[13] = {"--", "WP", "WN", "WB", "WR", "WQ", "WK", "BP", "BN", "BB", "BR", "BQ", "BK"};
 
+class move {
+public:
+    std::pair<int, int> init_pos;
+    std::pair<int, int> final_pos;
+    int captured_piece;
+    
+    move(std::pair<int, int> init_pos, std::pair<int, int> final_pos, int captured_piece) {
+        this->init_pos = init_pos;
+        this->final_pos = final_pos;
+        this->captured_piece = captured_piece;
+    }
+    
+    move(std::pair<int, int> init_pos, std::pair<int, int> final_pos) {
+        this->init_pos = init_pos;
+        this->final_pos = final_pos;
+        this->captured_piece = BL;
+    }
+};
+
 class chessboard {
 private:
     int board[8][8];
     int side_to_play;
+    
+    int get_piece_side(int piece) {
+        if(piece == BL) return BLANK;
+        if(piece <= WK) return WHITE;
+        return BLACK;
+    }
+    
+    int opposite_side() {
+        return side_to_play == WHITE ? BLACK : WHITE;
+    }
+    
+    bool is_square_in_range(int row, int col) {
+        return (row < 8 && row >= 0 && col < 8 && col >= 0);
+    }
+    
+    bool is_slider(int piece) {
+        return piece == WQ || piece == BQ || piece == WR || piece == BR || piece == WB || piece == BB;
+    }
 public:
     chessboard() {
         init();
@@ -74,11 +112,248 @@ public:
         std::cout << std::endl;
         std::cout << "Side to play: " << (side_to_play == WHITE ? "WHITE" : "BLACK") << "\n\n";
     }
+    
+    auto generate_all_moves() {
+        std::vector <move> movelist;
+        
+        for(int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++) {
+                int curr_piece = board[i][j];
+                
+                // The square where the piece will move
+                int var_i;
+                int var_j;
+                int next_piece;
+
+                if(get_piece_side(curr_piece) == side_to_play) {
+                    // Now slide the piece in all directions
+
+                    // Lots of diagonal moves now!! -> in all 4 directions -> Bishops and Queens
+                    if(is_slider(curr_piece) && curr_piece != WR && curr_piece != BR) {
+                        var_i = i + 1;
+                        var_j = j + 1;
+                        while(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_i++;
+                                var_j++;
+                            } else {
+                                break;
+                            }                           
+                        }
+                        
+                        var_i = i - 1;
+                        var_j = j - 1;
+                        while(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_i--;
+                                var_j--;
+                            } else {
+                                break;
+                            }                           
+                        }
+                        var_i = i + 1;
+                        var_j = j - 1;
+                        while(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_i++;
+                                var_j--;
+                            } else {
+                                break;
+                            }                           
+                        }
+                        
+                        var_i = i - 1;
+                        var_j = j + 1;
+                        while(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_i--;
+                                var_j++;
+                            } else {
+                                break;
+                            }                           
+                        }
+                    }
+                    
+                    // Straight moves in all 4 directions -> Rooks and Queens
+                    if(is_slider(curr_piece) && curr_piece != WB && curr_piece != BB) {
+                        var_i = i;
+                        var_j = j + 1;
+                        while(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_j++;
+                            } else {
+                                break;
+                            }                           
+                        }
+                        
+                        var_i = i;
+                        var_j = j - 1;
+                        while(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_j--;
+                            } else {
+                                break;
+                            }                           
+                        }
+                        var_i = i + 1;
+                        var_j = j;
+                        while(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_i++;
+                            } else {
+                                break;
+                            }                           
+                        }
+                        
+                        var_i = i - 1;
+                        var_j = j;
+                        while(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                              movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));
+                              break;
+                            } else if(get_piece_side(next_piece) == BLANK) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                                var_i--;
+                            } else {
+                                break;
+                            }                           
+                        }
+                    }
+
+                    if(curr_piece == WN || curr_piece == BN) {
+                        // The directions in which the knights can move
+                        std::pair<int, int> knight_moves[] = {{1, 2}, {1, -2}, {-1, 2}, {-1, -2},
+                                                    {2, 1}, {2, -1}, {-2, 1}, {-2, -1}};
+                        
+                        // Generate all knight moves -> capture an opponent piece or just move somewhere.
+                        for(auto next : knight_moves) {
+                            var_i = i + next.first;
+                            var_j = j + next.second;
+                            if(is_square_in_range(var_i, var_j)) {
+                                next_piece = board[var_i][var_j];
+                                if(next_piece == BL) {
+                                    movelist.push_back(move({i, j}, {var_i, var_j}));
+                                } else if(get_piece_side(next_piece) == opposite_side()) {
+                                    movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));    
+                                }
+                            }
+                        }
+                    }
+                    
+                    if(curr_piece == WP || curr_piece == BP) {
+                        int increment_sign = (side_to_play == WHITE ? -1 : 1);
+                        
+                        // Move the pawns 1 square ahead
+                        // Note that we have to take care of pawn promotion as well
+                        var_i = i + increment_sign;
+                        var_j = j;
+                        if(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(next_piece == BL) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                            }
+                        }
+                        
+                        // Move the pawns 2 squares ahead if the conditions are satisfied
+                        var_i = i + increment_sign * 2;
+                        var_j = j;
+                        if((i == 6 && curr_piece == WP) || (i == 1 && curr_piece == BP)) {
+                            next_piece = board[var_i][var_j];
+                            if(next_piece == BL) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}));
+                            }
+                        }
+                        
+                        // Diagonal captures
+                        // Note that we have to take care of pawn promotions as well
+                        var_i = i + increment_sign;
+                        var_j = j + 1;
+                        if(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));    
+                            }
+                        }
+                        
+                        var_i = i + increment_sign;
+                        var_j = j - 1;
+                        if(is_square_in_range(var_i, var_j)) {
+                            next_piece = board[var_i][var_j];
+                            if(get_piece_side(next_piece) == opposite_side()) {
+                                movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));    
+                            }
+                        }
+    
+                    }
+                }
+            }
+        }
+        
+        return movelist;
+    }
+    
+    void make_move(move m) {
+        board[m.final_pos.first][m.final_pos.second] = board[m.init_pos.first][m.init_pos.second];          
+        board[m.init_pos.first][m.init_pos.second] = BLANK;
+        side_to_play = (side_to_play == WHITE ? BLACK : WHITE);
+    }
+    
+    void undo_move(move m) {
+        board[m.init_pos.first][m.init_pos.second] = board[m.final_pos.first][m.final_pos.second];
+        board[m.final_pos.first][m.final_pos.second] = m.captured_piece;
+        side_to_play = (side_to_play == WHITE ? BLACK : WHITE);
+    }
 };
 
 int main() {
-	chessboard board;
-	
-	board.init();
-	board.print();
+    chessboard board;
+    
+    board.init();
+    board.print();
+    std::vector<move> movelist = board.generate_all_moves();
+    std::cout << "Total possible moves: " << movelist.size() << "\n\n";
+    
+    for(auto m : movelist) {
+        board.make_move(m);
+        board.print();
+        board.undo_move(m);
+    }
+
+    board.print();
 }
