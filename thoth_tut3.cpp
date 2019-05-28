@@ -319,7 +319,26 @@ public:
                                 movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));    
                             }
                         }
-    
+                    }
+                    
+                    if(curr_piece == WK || curr_piece == BK) {
+                        // The directions in which a king can move
+                        std::pair<int, int> king_moves[] = {{0, 1}, {0, -1}, {1, 0}, {-1, 0},
+                                                    {1, 1}, {1, -1}, {-1, 1}, {-1, -1}};
+                        
+                        // Generate all king moves -> capture an opponent piece or just move somewhere.
+                        for(auto next : king_moves) {
+                            var_i = i + next.first;
+                            var_j = j + next.second;
+                            if(is_square_in_range(var_i, var_j)) {
+                                next_piece = board[var_i][var_j];
+                                if(next_piece == BL) {
+                                    movelist.push_back(move({i, j}, {var_i, var_j}));
+                                } else if(get_piece_side(next_piece) == opposite_side()) {
+                                    movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));    
+                                }
+                            }
+                        }
                     }
                 }
             }

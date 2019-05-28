@@ -1,0 +1,246 @@
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP WP WP WP WP WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: WHITE
+
+Total possible moves: 20
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP -- -- -- -- -- -- -- 
+-- WP WP WP WP WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- WP WP WP WP WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- WP -- -- -- -- -- -- 
+WP -- WP WP WP WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- WP -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP -- WP WP WP WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- WP -- -- -- -- -- 
+WP WP -- WP WP WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- WP -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP WP -- WP WP WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- WP -- -- -- -- 
+WP WP WP -- WP WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- WP -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP WP WP -- WP WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- WP -- -- -- 
+WP WP WP WP -- WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- WP -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP WP WP WP -- WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- WP -- -- 
+WP WP WP WP WP -- WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- WP -- -- 
+-- -- -- -- -- -- -- -- 
+WP WP WP WP WP -- WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- WP -- 
+WP WP WP WP WP WP -- WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- WP -- 
+-- -- -- -- -- -- -- -- 
+WP WP WP WP WP WP -- WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- WP 
+WP WP WP WP WP WP WP -- 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- WP 
+-- -- -- -- -- -- -- -- 
+WP WP WP WP WP WP WP -- 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- WN -- -- -- -- -- 
+WP WP WP WP WP WP WP WP 
+WR -- WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+WN -- -- -- -- -- -- -- 
+WP WP WP WP WP WP WP WP 
+WR -- WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- WN 
+WP WP WP WP WP WP WP WP 
+WR WN WB WQ WK WB -- WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- WN -- -- 
+WP WP WP WP WP WP WP WP 
+WR WN WB WQ WK WB -- WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP WP WP WP WP WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: WHITE
+
+
+
