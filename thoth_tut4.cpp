@@ -34,14 +34,14 @@ enum {
 
 
 int init_pos[8][8] = { 
-    {BR, BN, BB, BQ, BK, BB, BN, BR},
-    {BP, BP, BP, BP, BP, BP, BP, BP},
+    {BL, BL, BL, BL, BQ, BL, BL, BL},
+    {BL, BL, BL, WP, BL, BL, BL, BL},
     {BL, BL, BL, BL, BL, BL, BL, BL},
     {BL, BL, BL, BL, BL, BL, BL, BL},
     {BL, BL, BL, BL, BL, BL, BL, BL},
     {BL, BL, BL, BL, BL, BL, BL, BL},
-    {WP, WP, WP, WP, WP, WP, WP, WP},
-    {WR, WN, WB, WQ, WK, WB, WN, WR}
+    {BL, BL, BL, BL, BL, BL, BL, BL},
+    {BL, BL, BL, BL, BL, BL, BL, BL}
 };
 
 std::string enum_to_piece[13] = {"--", "WP", "WN", "WB", "WR", "WQ", "WK", "BP", "BN", "BB", "BR", "BQ", "BK"};
@@ -296,7 +296,7 @@ public:
                         if(is_square_in_range(var_i, var_j)) {
                             next_piece = board[var_i][var_j];
                             if(next_piece == BL) {
-                                if(i != 7 && i != 0 ){
+                                if(var_i != 7 && var_i != 0 ){
                                     movelist.push_back(move({i, j}, {var_i, var_j}));    
                                 } else {
                                     movelist.push_back(move({i, j}, {var_i, var_j}, BL, side_to_play == WHITE ? WQ : BQ));
@@ -324,7 +324,7 @@ public:
                         if(is_square_in_range(var_i, var_j)) {
                             next_piece = board[var_i][var_j];
                             if(get_piece_side(next_piece) == opposite_side()) {
-                                if(i != 7 && i != 0) {
+                                if(var_i != 7 && var_i != 0) {
                                     movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));    
                                 } else {
                                     movelist.push_back(move({i, j}, {var_i, var_j}, next_piece, side_to_play == WHITE ? WQ : BQ));
@@ -340,7 +340,7 @@ public:
                         if(is_square_in_range(var_i, var_j)) {
                             next_piece = board[var_i][var_j];
                             if(get_piece_side(next_piece) == opposite_side()) {
-                                if(i != 7 && i != 0) {
+                                if(var_i != 7 && var_i != 0) {
                                     movelist.push_back(move({i, j}, {var_i, var_j}, next_piece));    
                                 } else {
                                     movelist.push_back(move({i, j}, {var_i, var_j}, next_piece, side_to_play == WHITE ? WQ : BQ));
@@ -381,12 +381,18 @@ public:
     void make_move(move m) {
         board[m.final_pos.first][m.final_pos.second] = board[m.init_pos.first][m.init_pos.second];          
         board[m.init_pos.first][m.init_pos.second] = BLANK;
+        if(m.promoted_piece != BL) {
+            board[m.final_pos.first][m.final_pos.second] = m.promoted_piece;
+        }
         side_to_play = (side_to_play == WHITE ? BLACK : WHITE);
     }
     
     void undo_move(move m) {
         board[m.init_pos.first][m.init_pos.second] = board[m.final_pos.first][m.final_pos.second];
         board[m.final_pos.first][m.final_pos.second] = m.captured_piece;
+        if(m.promoted_piece != BL) {
+            board[m.init_pos.first][m.init_pos.second] = side_to_play == WHITE ? BP : WP;
+        }
         side_to_play = (side_to_play == WHITE ? BLACK : WHITE);
     }
 };
