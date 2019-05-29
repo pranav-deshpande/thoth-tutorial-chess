@@ -42,7 +42,7 @@ enum {
 
 int init_pos[8][8] = { 
     {BR, BL, BL, BL, BK, BL, BL, BR},
-    {BL, BL, BL, BL, BL, BL, BL, BL},
+    {BL, WP, BL, BL, BL, BL, BL, BL},
     {BL, BL, BL, BL, BL, BL, BL, BL},
     {BL, BL, BL, BL, BL, BL, BL, BL},
     {BL, BL, BL, BL, BL, BL, BL, BL},
