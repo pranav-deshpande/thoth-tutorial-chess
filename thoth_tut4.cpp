@@ -22,6 +22,8 @@ along with Thoth Tutorial Chess. If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include <utility>
 
+
+#define INVALID -1
 #define BLANK 0
 #define WHITE 1
 #define BLACK 2
@@ -32,16 +34,21 @@ enum {
     BP, BN, BB, BR, BQ, BK
 };
 
+enum {
+    NO_CASTLE = 0, WHITE_QUEEN_SIDE_CASTLE, WHITE_KING_SIDE_CASTLE,
+    BLACK_QUEEN_SIDE_CASTLE, BLACK_KING_SIDE_CASTLE
+};
+
 
 int init_pos[8][8] = { 
-    {BL, BL, BL, BL, BQ, BL, BL, BL},
-    {BL, BL, BL, WP, BL, BL, BL, BL},
+    {BR, BL, BL, BL, BK, BL, BL, BR},
     {BL, BL, BL, BL, BL, BL, BL, BL},
     {BL, BL, BL, BL, BL, BL, BL, BL},
     {BL, BL, BL, BL, BL, BL, BL, BL},
     {BL, BL, BL, BL, BL, BL, BL, BL},
     {BL, BL, BL, BL, BL, BL, BL, BL},
-    {BL, BL, BL, BL, BL, BL, BL, BL}
+    {BL, BL, BL, BL, BL, BL, BL, BL},
+    {WR, BL, BL, BL, WK, BL, BL, WR}
 };
 
 std::string enum_to_piece[13] = {"--", "WP", "WN", "WB", "WR", "WQ", "WK", "BP", "BN", "BB", "BR", "BQ", "BK"};
@@ -52,12 +59,14 @@ public:
     std::pair<int, int> final_pos;
     int captured_piece;
     int promoted_piece;
+    int castle_code;
     
-     move(std::pair<int, int> init_pos, std::pair<int, int> final_pos, int captured_piece, int promoted_piece) {
+    move(std::pair<int, int> init_pos, std::pair<int, int> final_pos, int captured_piece, int promoted_piece) {
         this->init_pos = init_pos;
         this->final_pos = final_pos;
         this->captured_piece = captured_piece;
         this->promoted_piece = promoted_piece;
+        this->castle_code = NO_CASTLE;
     }
     
     move(std::pair<int, int> init_pos, std::pair<int, int> final_pos, int captured_piece) {
@@ -65,6 +74,7 @@ public:
         this->final_pos = final_pos;
         this->captured_piece = captured_piece;
         this->promoted_piece = BL;
+        this->castle_code = NO_CASTLE;
     }
     
     move(std::pair<int, int> init_pos, std::pair<int, int> final_pos) {
@@ -72,6 +82,15 @@ public:
         this->final_pos = final_pos;
         this->captured_piece = BL;
         this->promoted_piece = BL;
+        this->castle_code = NO_CASTLE;
+    }
+    
+    move(int castle_code) {
+        this->castle_code = castle_code;
+        this->init_pos = {INVALID, INVALID};
+        this->final_pos = {INVALID, INVALID};
+        this->captured_piece = INVALID;
+        this->promoted_piece = INVALID;
     }
 };
 
@@ -79,6 +98,11 @@ class chessboard {
 private:
     int board[8][8];
     int side_to_play;
+    
+    bool whiteQcastle, prevWhiteQcastle;
+    bool whiteKcastle, prevWhiteKcastle;
+    bool blackQcastle, prevBlackQcastle;
+    bool blackKcastle, prevBlackKcastle;
     
     int get_piece_side(int piece) {
         if(piece == BL) return BLANK;
@@ -108,6 +132,8 @@ public:
                 board[i][j] = init_pos[i][j];
             }
         }
+        whiteQcastle = whiteKcastle = true;
+        blackQcastle = blackKcastle;
         side_to_play = WHITE;
     }
     
@@ -370,7 +396,28 @@ public:
                                 }
                             }
                         }
+                        
+                        // Castles
+                        if(side_to_play == WHITE && whiteQcastle == true 
+                                    && board[7][1] == BL && board[7][2] == BL 
+                                                && board[7][3] == BL) {
+                            movelist.push_back(move(WHITE_QUEEN_SIDE_CASTLE));             
+                        }
+                        if(side_to_play == WHITE && whiteKcastle == true 
+                                    && board[7][5] == BL && board[7][6] == BL) {
+                            movelist.push_back(move(WHITE_KING_SIDE_CASTLE));
+                        }
+                        if(side_to_play == BLACK && blackQcastle == true 
+                                    && board[0][1] == BL && board[0][2] == BL 
+                                                && board[0][3] == BL) {
+                            movelist.push_back(move(BLACK_QUEEN_SIDE_CASTLE));             
+                        }
+                        if(side_to_play == BLACK && blackKcastle == true 
+                                    && board[0][5] == BL && board[0][6] == BL) {
+                            movelist.push_back(move(BLACK_KING_SIDE_CASTLE));
+                        }
                     }
+                    
                 }
             }
         }
@@ -379,6 +426,69 @@ public:
     }
     
     void make_move(move m) {
+        int curr_piece = board[m.init_pos.first][m.init_pos.second];
+        // Store the current castling permissions
+        prevWhiteKcastle = whiteKcastle;
+        prevWhiteQcastle = whiteQcastle;
+        prevBlackKcastle = blackKcastle;
+        prevBlackQcastle = blackQcastle;
+        
+        // Set the permissions
+        if(curr_piece == WK) {
+            whiteKcastle = false;
+            whiteQcastle = false;
+        }
+        if(curr_piece == BK) {
+            blackKcastle = false;
+            blackQcastle = false;
+        }
+        if(curr_piece == WR) {
+            if(m.init_pos.second == 7) {
+                whiteKcastle = false;
+            } else if(m.init_pos.second == 0) {
+                whiteQcastle = false;
+            }
+        }
+        if(curr_piece == BR) {
+            if(m.init_pos.second == 7) {
+                blackKcastle = false;
+            } else if(m.init_pos.second == 0) {
+                blackQcastle = false;
+            }
+        }
+        if(m.castle_code != NO_CASTLE) {
+            switch(m.castle_code) {
+                case WHITE_QUEEN_SIDE_CASTLE:
+                    board[7][2] = WK;
+                    board[7][3] = WR;
+                    board[7][0] = BL;
+                    board[7][4] = BL;
+                    whiteQcastle = false;
+                    break;
+                case WHITE_KING_SIDE_CASTLE:
+                    board[7][6] = WK; 
+                    board[7][5] = WR;
+                    board[7][4] = BL;
+                    board[7][7] = BL;
+                    whiteKcastle = false;
+                    break;
+                case BLACK_QUEEN_SIDE_CASTLE:
+                    board[0][2] = BK;
+                    board[0][3] = BR;
+                    board[0][0] = BL;
+                    board[0][4] = BL;
+                    blackQcastle = false;
+                    break;
+                case BLACK_KING_SIDE_CASTLE:
+                    board[0][6] = BK; 
+                    board[0][5] = BR;
+                    board[0][4] = BL;
+                    board[0][7] = BL;
+                    blackKcastle = false;
+                    break;
+            }
+            return;
+        }
         board[m.final_pos.first][m.final_pos.second] = board[m.init_pos.first][m.init_pos.second];          
         board[m.init_pos.first][m.init_pos.second] = BLANK;
         if(m.promoted_piece != BL) {
@@ -388,6 +498,40 @@ public:
     }
     
     void undo_move(move m) {
+        // Unconditionally restore the castle permissions
+        whiteQcastle = prevWhiteQcastle;
+        whiteKcastle = prevWhiteKcastle;
+        blackQcastle = prevBlackQcastle;
+        blackKcastle = prevBlackKcastle;
+        if(m.castle_code != NO_CASTLE) {
+            switch(m.castle_code) {
+                case WHITE_QUEEN_SIDE_CASTLE:
+                    board[7][2] = BL;
+                    board[7][3] = BL;
+                    board[7][0] = WR;
+                    board[7][4] = WK;
+                    break;
+                case WHITE_KING_SIDE_CASTLE:
+                    board[7][6] = BL; 
+                    board[7][5] = BL;
+                    board[7][4] = WK;
+                    board[7][7] = WR;
+                    break;
+                case BLACK_QUEEN_SIDE_CASTLE:
+                    board[0][2] = BL;
+                    board[0][3] = BL;
+                    board[0][0] = BR;
+                    board[0][4] = BK;
+                    break;
+                case BLACK_KING_SIDE_CASTLE:
+                    board[0][6] = BL; 
+                    board[0][5] = BL;
+                    board[0][4] = BK;
+                    board[0][7] = BR;
+                    break;
+            }
+            return;
+        }
         board[m.init_pos.first][m.init_pos.second] = board[m.final_pos.first][m.final_pos.second];
         board[m.final_pos.first][m.final_pos.second] = m.captured_piece;
         if(m.promoted_piece != BL) {
