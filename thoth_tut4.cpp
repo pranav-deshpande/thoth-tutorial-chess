@@ -152,6 +152,26 @@ public:
     auto generate_all_moves() {
         std::vector <move> movelist;
         
+        // Castles
+        if(side_to_play == WHITE && whiteQcastle == true 
+                    && board[7][1] == BL && board[7][2] == BL 
+                                && board[7][3] == BL) {
+            movelist.push_back(move(WHITE_QUEEN_SIDE_CASTLE));             
+        }
+        if(side_to_play == WHITE && whiteKcastle == true 
+                    && board[7][5] == BL && board[7][6] == BL) {
+            movelist.push_back(move(WHITE_KING_SIDE_CASTLE));
+        }
+        if(side_to_play == BLACK && blackQcastle == true 
+                    && board[0][1] == BL && board[0][2] == BL 
+                                && board[0][3] == BL) {
+            movelist.push_back(move(BLACK_QUEEN_SIDE_CASTLE));             
+        }
+        if(side_to_play == BLACK && blackKcastle == true 
+                    && board[0][5] == BL && board[0][6] == BL) {
+            movelist.push_back(move(BLACK_KING_SIDE_CASTLE));
+        }
+    
         for(int i = 0; i < 8; i++) {
             for(int j = 0; j < 8; j++) {
                 int curr_piece = board[i][j];
@@ -397,25 +417,6 @@ public:
                             }
                         }
                         
-                        // Castles
-                        if(side_to_play == WHITE && whiteQcastle == true 
-                                    && board[7][1] == BL && board[7][2] == BL 
-                                                && board[7][3] == BL) {
-                            movelist.push_back(move(WHITE_QUEEN_SIDE_CASTLE));             
-                        }
-                        if(side_to_play == WHITE && whiteKcastle == true 
-                                    && board[7][5] == BL && board[7][6] == BL) {
-                            movelist.push_back(move(WHITE_KING_SIDE_CASTLE));
-                        }
-                        if(side_to_play == BLACK && blackQcastle == true 
-                                    && board[0][1] == BL && board[0][2] == BL 
-                                                && board[0][3] == BL) {
-                            movelist.push_back(move(BLACK_QUEEN_SIDE_CASTLE));             
-                        }
-                        if(side_to_play == BLACK && blackKcastle == true 
-                                    && board[0][5] == BL && board[0][6] == BL) {
-                            movelist.push_back(move(BLACK_KING_SIDE_CASTLE));
-                        }
                     }
                     
                 }
