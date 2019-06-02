@@ -488,6 +488,7 @@ public:
                     blackKcastle = false;
                     break;
             }
+            side_to_play = (side_to_play == WHITE ? BLACK : WHITE);
             return;
         }
         board[m.final_pos.first][m.final_pos.second] = board[m.init_pos.first][m.init_pos.second];          
@@ -531,6 +532,7 @@ public:
                     board[0][7] = BR;
                     break;
             }
+            side_to_play = (side_to_play == WHITE ? BLACK : WHITE);
             return;
         }
         board[m.init_pos.first][m.init_pos.second] = board[m.final_pos.first][m.final_pos.second];

@@ -20,7 +20,7 @@ BR -- -- -- BK -- -- BR
 -- -- -- -- -- -- -- -- 
 -- -- WK WR -- -- -- WR 
 
-Side to play: WHITE
+Side to play: BLACK
 
 BR -- -- -- BK -- -- BR 
 -- WP -- -- -- -- -- -- 
@@ -31,7 +31,7 @@ BR -- -- -- BK -- -- BR
 -- -- -- -- -- -- -- -- 
 WR -- -- -- -- WR WK -- 
 
-Side to play: WHITE
+Side to play: BLACK
 
 BR WQ -- -- BK -- -- BR 
 -- -- -- -- -- -- -- -- 
