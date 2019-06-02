@@ -108,7 +108,6 @@ Side to play: WHITE
 
 Side to play: BLACK
 
-I am here
 -- -- -- -- -- -- -- -- 
 -- -- -- -- -- -- -- -- 
 -- -- -- -- -- -- -- -- 

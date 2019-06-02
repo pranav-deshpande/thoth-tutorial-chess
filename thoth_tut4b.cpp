@@ -540,7 +540,6 @@ public:
         board[m.init_pos.first][m.init_pos.second] = BLANK;
         if(m.do_enpassant) {
             board[en_passant_square.first][en_passant_square.second] = BL;
-            std::cout << "I am here" << std::endl;
         }
         if(m.promoted_piece != BL) {
             board[m.final_pos.first][m.final_pos.second] = m.promoted_piece;
