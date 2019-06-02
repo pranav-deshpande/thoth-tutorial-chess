@@ -3,4 +3,6 @@ A simple chess engine intended to teach beginners the basics of chess programmin
 ## Summary :
 thoth_tut1.cpp : Board and piece representation. Article: [Computer Chess](https://pranav-deshpande.me/2019/05/22/computer-chess)  
 thoth_tut2.cpp : Move representation and move generation for sliders. Article: [Computer Chess II: Move generation](https://pranav-deshpande.me/2019/05/25/computer-chess-ii-move-generation/)  
-thoth_tut3.cpp : Pawn, king and knight move generation
+thoth_tut3.cpp : Pawn, king and knight move generation  
+thoth_tut4a.cpp : Pawn promotion and castling  
+thoth_tut4b.cpp : En passant moves 
