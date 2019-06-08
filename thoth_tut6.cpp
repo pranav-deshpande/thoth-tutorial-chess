@@ -45,14 +45,14 @@ enum {
 };
 
 int init_pos[8][8] = {
-        {BL, BL, BL, BL, BL, BR, BL, BL},
-        {BL, BL, BL, BL, BL, BL, BL, BL},
-        {BL, BL, BL, BL, BL, BL, BL, BQ},
         {BL, BL, BL, BL, BL, BL, BL, BL},
         {BL, BL, BL, BL, BL, BL, BL, BL},
-        {BL, BL, BL, BL, BL, BL, BL, BB},
-        {BL, BL, BP, BL, BL, BL, BL, BL},
-        {BL, BL, BL, BL, WK, BL, BL, BL}
+        {BL, BL, BL, BL, BL, BL, BL, BL},
+        {BL, BL, BL, BL, BL, BL, BL, BL},
+        {BL, BL, BL, BL, BL, BL, BL, BL},
+        {BQ, BK, BL, BL, BL, BL, BL, BL},
+        {BL, BL, BL, BL, BL, BL, BL, BL},
+        {BL, WK, BL, BL, BL, BL, BL, BL}
 };
 
 std::string enum_to_piece[13] = {"--", "WP", "WN", "WB", "WR", "WQ", "WK", "BP", "BN", "BB", "BR", "BQ", "BK"};
@@ -188,7 +188,7 @@ public:
         is_en_passant_allowed = false;
         en_passant_square = {INVALID, INVALID};
         fifty_move_history.push_back(0);
-        side_to_play = WHITE;
+        side_to_play = BLACK;
     }
 
     void print() {
@@ -953,7 +953,8 @@ public:
             return FIFTY_MOVE_DRAW;
         }
         
-        
+        // default
+        return NO_END_OF_GAME;
     }
 };
 
@@ -967,6 +968,12 @@ int main() {
     for(auto m : movelist) {
         board.make_move(m);
         board.print();
+        int game_end_status = board.is_end_of_game();
+        if(game_end_status != NO_END_OF_GAME) {
+            std::cout << "Game has ended.\n\n";
+            std::cout << game_end_status << std::endl;
+            break;
+        }
         board.undo_move(m);
         board.print();
     }
