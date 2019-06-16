@@ -45,15 +45,15 @@ enum {
     NO_END_OF_GAME, CHECKMATE, STALEMATE, INSUFFICIENT_MATERIAL_DRAW, THREE_MOVE_DRAW, FIFTY_MOVE_DRAW
 };
 
-int init_pos[8][8] = {
-        {BL, BL, BL, BL, BL, BL, BL, BL},
-        {BL, BL, BL, BL, BL, BL, BL, BL},
-        {BL, BL, BL, BL, BL, BL, BL, BL},
-        {BL, BL, BL, BL, BL, BL, BL, BL},
-        {BL, BL, BL, BL, BL, BL, BL, BL},
-        {BQ, BK, BL, BL, BL, BL, BL, BL},
-        {BL, BL, BL, BL, BL, BL, BL, BL},
-        {BL, WK, BL, BL, BL, BL, BL, BL}
+int init_pos[8][8] = { 
+    {BR, BN, BB, BQ, BK, BB, BN, BR},
+    {BP, BP, BP, BP, BP, BP, BP, BP},
+    {BL, BL, BL, BL, BL, BL, BL, BL},
+    {BL, BL, BL, BL, BL, BL, BL, BL},
+    {BL, BL, BL, BL, BL, BL, BL, BL},
+    {BL, BL, BL, BL, BL, BL, BL, BL},
+    {WP, WP, WP, WP, WP, WP, WP, WP},
+    {WR, WN, WB, WQ, WK, WB, WN, WR}
 };
 
 std::string enum_to_piece[13] = {"--", "WP", "WN", "WB", "WR", "WQ", "WK", "BP", "BN", "BB", "BR", "BQ", "BK"};
@@ -69,13 +69,14 @@ void populate_square_move_maps() {
     // a8, b8, ...
     // ...
     // a1, b1, ...
-    for(int row = 7; row >= 0; row--) {
-        for(int col = 0; col < 8; col++) {
-            // For clarity
-            int rank = row;
-            int file = col; 
-            std::pair<int, int> square = {rank, file};
-
+    // The variables i and j do the specify the rank/file 
+    // They only help with printing the board
+    for(int i = 0; i < 8; i++) {
+        for(int j = 0; j < 8; j++) {
+            std::pair<int, int> square = {i, j};
+            
+            int rank = 7 - i;
+            int file = j;
             std::string file_name = letters[file];
             std::string rank_name = numbers[rank];
             std::string square_name = file_name + rank_name;
@@ -138,6 +139,20 @@ public:
         this->captured_piece = captured_piece;
         this->promoted_piece = BL;
         this->castle_code = NO_CASTLE;
+    }
+    
+    std::string get_move_string() {
+        std::string move_string;
+        if(castle_code == NO_CASTLE) {
+            move_string = square_to_string_map[init_pos] + square_to_string_map[final_pos];
+        } else {
+            if(castle_code == WHITE_KING_SIDE_CASTLE || BLACK_KING_SIDE_CASTLE) {
+                move_string = "0-0";
+            } else {
+                move_string = "0-0-0";
+            }
+        }
+        return move_string;
     }
 };
 
@@ -212,12 +227,12 @@ public:
                 board[i][j] = init_pos[i][j];
             }
         }
-        whiteQcastle = whiteKcastle = false;
-        blackQcastle = blackKcastle = false;
-        is_en_passant_allowed = false;
+        whiteQcastle = whiteKcastle = true;
+        blackQcastle = blackKcastle = true;
+        is_en_passant_allowed = true;
         en_passant_square = {INVALID, INVALID};
         fifty_move_history.push_back(0);
-        side_to_play = BLACK;
+        side_to_play = WHITE;
     }
 
     void print() {
@@ -985,14 +1000,34 @@ public:
         // default
         return NO_END_OF_GAME;
     }
+    
+    move parse_move_from_string(std::string move_string, bool &flag) {
+        auto movelist = generate_all_moves();
+        for(move m: movelist) {
+            if(m.get_move_string() == move_string) {
+                flag = true;
+                return m;
+            }
+        }
+        return move({INVALID, INVALID}, {INVALID, INVALID});
+    }
 };
 
 int main() {
     populate_square_move_maps();
-    for(int row = 7; row >= 0; row--) {
-        for(int col = 0; col < 8; col++) {
-            std::cout<< square_to_string_map[{row, col}] << " ";
+    for(int i = 0; i < 8; i++) {
+        for(int j = 0; j < 8; j++) {
+            std::cout<< square_to_string_map[{i, j}] << " ";
         }
-    std::cout << std::endl;
+        std::cout << std::endl;
     }
+    
+    std::cout << std::endl;
+    chessboard board;
+    board.print();
+    bool flag = false;
+    board.make_move(board.parse_move_from_string("e2e4", flag));
+    board.print();
+    board.make_move(board.parse_move_from_string("e7e5", flag));
+    board.print();
 }
