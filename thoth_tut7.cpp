@@ -1015,80 +1015,128 @@ public:
 
 int main() {
     populate_square_move_maps();
-    for(int i = 0; i < 8; i++) {
-        for(int j = 0; j < 8; j++) {
-            std::cout<< square_to_string_map[{i, j}] << " ";
-        }
-        std::cout << std::endl;
-    }
+    // for(int i = 0; i < 8; i++) {
+    //     for(int j = 0; j < 8; j++) {
+    //         std::cout<< square_to_string_map[{i, j}] << " ";
+    //     }
+    //     std::cout << std::endl;
+    // }
     
-    std::cout << std::endl;
+    // std::cout << std::endl;
+    // chessboard board;
+    // board.print();
+    // bool flag = false;
+    // board.make_move(board.parse_move_from_string("e2e4", flag));
+    // board.print();
+    // board.make_move(board.parse_move_from_string("e7e5", flag));
+    // board.print();
+    
+    // board.init();
+    // board.print();
+    
     chessboard board;
-    board.print();
-    bool flag = false;
-    board.make_move(board.parse_move_from_string("e2e4", flag));
-    board.print();
-    board.make_move(board.parse_move_from_string("e7e5", flag));
-    board.print();
-    
-    board.init();
-    
-    std::string input;
-    bool computer_brain = false;
+    std::string input = "mode";
+    std::string message;
+    int game_end_flag;
 
-    std::cout << "Play with a friend or the computer? (Enter f/c): ";
+    // Defaults
+    bool computer_brain = false;
+    int user_side = WHITE;
+    
+
     // Start the loop
     while(true) {
         std::cin >> input;
-        if(input == "" || input == "\n") {
+        if(input == "") {
             continue;
         }
-        
-        if(input == "f") {
-            std::cout << "You are in 2 player mode now!" << std::endl;
-            computer_brain = false;
-        } else if(input == "c") {
-            std::cout << "You are playing againts the computer now!" << std::endl;
-            computer_brain = true;
+
+        if(input == "exit") {
+            message = "EXIT command received. Exiting...";
+            break;
         }
         
-        
-        std::cout << "Enter a move: ";
-        bool is_move_valid = false;
-        move m = board.parse_move_from_string(input, is_move_valid);
-        int side = board.get_curr_side();
-        if(is_move_valid) {
-            std::cout << "Playing " << input << std::endl;
-            board.make_move(m);
-            int game_end_flag = board.is_end_of_game();
-            if(game_end_flag != NO_END_OF_GAME) {
-                std::string message;
-                switch(game_end_flag) {
-                case CHECKMATE:
-                    message = "Game ends!";
-                    break;
-                case STALEMATE:
-                    message = "Stalemate! The king is not in check and there are no vaild moves!";
-                    break;
-                case INSUFFICIENT_MATERIAL_DRAW:
-                    message = "Draw due to insufficient material";
-                    break;
-                case THREE_MOVE_DRAW:
-                    message = "Game drawn. The position has been repeated 3 times.";
-                    break;
-                case FIFTY_MOVE_DRAW:
-                    message = "Draw by the fifty move rule!";
-                    break;
-                default:
-                    std::cout << "End of Game Type Unknown! Exiting...";
-                    assert(false);
-                }
+        if(input == "mode") {
+            std::cin >> input;
+            if(input == "f") {
+                computer_brain = false;
+                message = "You are in 2 player mode now!\n";
+            } else if(input == "c") {
+                message = "You are playing againts the computer now!\n";
+                computer_brain = true;
+            } else {
+                message = "Invalid mode! Existing mode not changed!\n";
             }
-            board.print();
-        } else {
-            std::cout << "Invalid move entered! Please enter a valid move!" << std::endl;
         }
-    }
-    
+        
+        if(input == "side") {
+            std::cin >> input;
+            if(input == "w") {
+                user_side = WHITE;
+                message = "You have chosen WHITE\n"; 
+            } else if(input == "b") {
+                user_side = BLACK;
+                message = "You have chosen BLACK\n"; 
+            } else {
+                message = "Invalid side! Existing user player side not changed!\n";
+            }
+        }
+        
+        if(input == "move") {
+            std::cin >> input;
+            bool is_move_valid = false;
+            int side = board.get_curr_side();
+            move m = board.parse_move_from_string(input, is_move_valid);
+            if(is_move_valid) {
+                board.make_move(m);
+                game_end_flag = board.is_end_of_game();
+                board.print();
+                message = "Played " + input + "\n\n";
+            } else {
+                message = "Invalid move entered! Please enter a valid move!\n\n";
+            }
+        }
+        
+        if(computer_brain && user_side != board.get_curr_side()) {
+            auto movelist = board.generate_all_moves();
+            board.make_move(movelist[0]);
+            game_end_flag = board.is_end_of_game();
+            board.print();
+            message = "Played " + movelist[0].get_move_string() + "\n\n";
+        }
+        
+        switch(game_end_flag) {
+            case NO_END_OF_GAME:
+                break;
+            case CHECKMATE:
+                message = "Checkmate! ";
+                if(board.get_curr_side() == BLACK) {
+                    message += "WHITE";
+                } else {
+                    message += "BLACK";
+                }
+                message += " wins! Congrats :-)";
+                break;
+            case STALEMATE:
+                message = "Stalemate! The king is not in check and there are no vaild moves!";
+                break;
+            case INSUFFICIENT_MATERIAL_DRAW:
+                message = "Draw due to insufficient material";
+                break;
+            case THREE_MOVE_DRAW:
+                message = "Game drawn. The position has been repeated 3 times.";
+                break;
+            case FIFTY_MOVE_DRAW:
+                message = "Draw by the fifty move rule!";
+                break;
+            default:
+                message = "End of Game Type Unknown! Exiting...";
+        }
+
+        std::cout << message << std::endl;
+        if(game_end_flag != NO_END_OF_GAME) {
+            break;
+        }
+    }  
     
 }
