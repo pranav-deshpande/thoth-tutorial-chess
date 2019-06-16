@@ -212,10 +212,6 @@ private:
     bool is_bishop(int piece) {
         return piece == WB || piece == BB;
     }
-    
-    bool is_queen(int piece) {
-        
-    }
 public:
     chessboard() {
         init();
@@ -245,6 +241,10 @@ public:
 
         std::cout << std::endl;
         std::cout << "Side to play: " << (side_to_play == WHITE ? "WHITE" : "BLACK") << "\n\n";
+    }
+    
+    int get_curr_side() {
+        return side_to_play;
     }
 
     void make_move(move m) {
@@ -1030,4 +1030,65 @@ int main() {
     board.print();
     board.make_move(board.parse_move_from_string("e7e5", flag));
     board.print();
+    
+    board.init();
+    
+    std::string input;
+    bool computer_brain = false;
+
+    std::cout << "Play with a friend or the computer? (Enter f/c): ";
+    // Start the loop
+    while(true) {
+        std::cin >> input;
+        if(input == "" || input == "\n") {
+            continue;
+        }
+        
+        if(input == "f") {
+            std::cout << "You are in 2 player mode now!" << std::endl;
+            computer_brain = false;
+        } else if(input == "c") {
+            std::cout << "You are playing againts the computer now!" << std::endl;
+            computer_brain = true;
+        }
+        
+        
+        std::cout << "Enter a move: ";
+        bool is_move_valid = false;
+        move m = board.parse_move_from_string(input, is_move_valid);
+        int side = board.get_curr_side();
+        if(is_move_valid) {
+            std::cout << "Playing " << input << std::endl;
+            board.make_move(m);
+            int game_end_flag = board.is_end_of_game();
+            if(game_end_flag != NO_END_OF_GAME) {
+                std::string message;
+                switch(game_end_flag) {
+                case CHECKMATE:
+                    message = "Game ends!";
+                    break;
+                case STALEMATE:
+                    message = "Stalemate! The king is not in check and there are no vaild moves!";
+                    break;
+                case INSUFFICIENT_MATERIAL_DRAW:
+                    message = "Draw due to insufficient material";
+                    break;
+                case THREE_MOVE_DRAW:
+                    message = "Game drawn. The position has been repeated 3 times.";
+                    break;
+                case FIFTY_MOVE_DRAW:
+                    message = "Draw by the fifty move rule!";
+                    break;
+                default:
+                    std::cout << "End of Game Type Unknown! Exiting...";
+                    assert(false);
+                }
+            }
+            board.print();
+        } else {
+            std::cout << "Invalid move entered! Please enter a valid move!" << std::endl;
+        }
+    }
+    
+    
 }
