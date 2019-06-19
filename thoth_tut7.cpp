@@ -1013,36 +1013,36 @@ public:
     }
 };
 
+// Auxiliary function to print help commands
+void display_help() {
+    std::cout << "List of available commands: \n\n";
+    std::cout << "help: Display this help.\n";
+    std::cout << "print: Print the board.\n";
+    std::cout << "think: Make the computer think for you, i.e. play the current move regardless of user/computer side."
+              << "Also works for a 2 player game. Can be used for hints.\n";
+    std::cout << "exit: End the game.\n" ;
+    std::cout << "mode: Enter 'mode f' for 2 player mode and 'mode c' to play against the computer. Can be switched during play.\n";
+    std::cout << "side: Enter 'side w' to 'side b' for white/black respectively. Can be switched during play.\n";
+    std::cout << "move: Enter move <actual_move> to play the move. Eg. move e2e4/move 0-0";
+}
+
 int main() {
     populate_square_move_maps();
-    // for(int i = 0; i < 8; i++) {
-    //     for(int j = 0; j < 8; j++) {
-    //         std::cout<< square_to_string_map[{i, j}] << " ";
-    //     }
-    //     std::cout << std::endl;
-    // }
-    
-    // std::cout << std::endl;
-    // chessboard board;
-    // board.print();
-    // bool flag = false;
-    // board.make_move(board.parse_move_from_string("e2e4", flag));
-    // board.print();
-    // board.make_move(board.parse_move_from_string("e7e5", flag));
-    // board.print();
-    
-    // board.init();
-    // board.print();
     
     chessboard board;
-    std::string input = "mode";
+    std::string input;
     std::string message;
     int game_end_flag;
+    bool think;
 
     // Defaults
     bool computer_brain = false;
     int user_side = WHITE;
-    
+
+    // Output commands and their usage
+    display_help();
+    std::cout << "\n\n";
+    board.print();    
 
     // Start the loop
     while(true) {
@@ -1051,25 +1051,41 @@ int main() {
             continue;
         }
 
-        if(input == "exit") {
+        else if(input == "help") {
+            message = "\n";
+            std::cout << "\n";
+            display_help();
+        }
+
+        else if(input == "print") {
+            message = "";
+            board.print();
+        }
+
+        else if(input == "think") {
+            message = "";
+            think = true;
+        }
+
+        else if(input == "exit") {
             message = "EXIT command received. Exiting...";
             break;
         }
         
-        if(input == "mode") {
+        else if(input == "mode") {
             std::cin >> input;
             if(input == "f") {
                 computer_brain = false;
                 message = "You are in 2 player mode now!\n";
             } else if(input == "c") {
-                message = "You are playing againts the computer now!\n";
+                message = "You are playing against the computer now!\n";
                 computer_brain = true;
             } else {
                 message = "Invalid mode! Existing mode not changed!\n";
             }
         }
         
-        if(input == "side") {
+        else if(input == "side") {
             std::cin >> input;
             if(input == "w") {
                 user_side = WHITE;
@@ -1082,7 +1098,7 @@ int main() {
             }
         }
         
-        if(input == "move") {
+        else if(input == "move") {
             std::cin >> input;
             bool is_move_valid = false;
             int side = board.get_curr_side();
@@ -1096,13 +1112,20 @@ int main() {
                 message = "Invalid move entered! Please enter a valid move!\n\n";
             }
         }
+
+        else {
+            message = "Unknown input! Type 'help' to view the list of available commands!\n\n";
+        }
         
-        if(computer_brain && user_side != board.get_curr_side()) {
+        if((computer_brain && user_side != board.get_curr_side()) || think) {
             auto movelist = board.generate_all_moves();
-            board.make_move(movelist[0]);
+            // The current logic is to choose a random index.
+            // We will implement an AI later.
+            board.make_move(movelist[rand() % movelist.size()]);
             game_end_flag = board.is_end_of_game();
             board.print();
             message = "Played " + movelist[0].get_move_string() + "\n\n";
+            think = false;
         }
         
         switch(game_end_flag) {
