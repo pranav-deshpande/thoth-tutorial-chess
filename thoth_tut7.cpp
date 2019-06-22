@@ -1021,8 +1021,10 @@ void display_help() {
     std::cout << "think: Make the computer think for you, i.e. play the current move regardless of user/computer side.\n"
               << "       Also works for a 2 player game. Can be used for hints.\n";
     std::cout << "exit: End the game.\n" ;
-    std::cout << "mode: Enter 'mode f' for 2 player mode and 'mode c' to play against the computer. Can be switched during play.\n";
-    std::cout << "side: Enter 'side w' to 'side b' for white/black respectively. Can be switched during play.\n";
+    std::cout << "mode: Enter 'mode f' for 2 player mode and 'mode c' to play against the computer.\n" 
+              << "      Can be switched during play.\n";
+    std::cout << "side: Enter 'side w' to 'side b' for white/black respectively.\n"
+              << "      Can be switched during play.\n";
     std::cout << "move: Enter move <actual_move> to play the move. Eg. move e2e4/move 0-0";
 }
 

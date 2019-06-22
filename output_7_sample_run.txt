@@ -1,0 +1,127 @@
+List of available commands: 
+
+help: Display this help.
+print: Print the board.
+think: Make the computer think for you, i.e. play the current move regardless of user/computer side.
+       Also works for a 2 player game. Can be used for hints.
+exit: End the game.
+mode: Enter 'mode f' for 2 player mode and 'mode c' to play against the computer.
+      Can be switched during play.
+side: Enter 'side w' to 'side b' for white/black respectively.
+      Can be switched during play.
+move: Enter move <actual_move> to play the move. Eg. move e2e4/move 0-0
+
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP WP WP WP WP WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: WHITE
+
+side w
+You have chosen WHITE
+
+mode c
+You are playing against the computer now!
+
+move e2e4
+BR BN BB BQ BK BB BN BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- WP -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP WP WP WP -- WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR BN BB BQ BK BB -- BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- BN -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- -- WP -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP WP WP WP -- WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: WHITE
+
+Played b8c6
+
+
+move d2d4
+BR BN BB BQ BK BB -- BR 
+BP BP BP BP BP BP BP BP 
+-- -- -- -- -- BN -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- WP WP -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP WP WP -- -- WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: BLACK
+
+BR -- BB BQ BK BB -- BR 
+BP BP BP BP BP BP BP BP 
+-- -- BN -- -- BN -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- WP WP -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP WP WP -- -- WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: WHITE
+
+Played b8c6
+
+
+help
+
+List of available commands: 
+
+help: Display this help.
+print: Print the board.
+think: Make the computer think for you, i.e. play the current move regardless of user/computer side.
+       Also works for a 2 player game. Can be used for hints.
+exit: End the game.
+mode: Enter 'mode f' for 2 player mode and 'mode c' to play against the computer.
+      Can be switched during play.
+side: Enter 'side w' to 'side b' for white/black respectively.
+      Can be switched during play.
+move: Enter move <actual_move> to play the move. Eg. move e2e4/move 0-0
+
+print
+BR -- BB BQ BK BB -- BR 
+BP BP BP BP BP BP BP BP 
+-- -- BN -- -- BN -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- WP WP -- -- -- 
+-- -- -- -- -- -- -- -- 
+WP WP WP -- -- WP WP WP 
+WR WN WB WQ WK WB WN WR 
+
+Side to play: WHITE
+
+
+think
+BR -- BB BQ BK BB -- BR 
+BP BP BP BP BP BP BP BP 
+-- -- BN -- -- BN -- -- 
+-- -- -- -- -- -- -- -- 
+-- -- -- WP WP -- -- -- 
+-- -- -- -- -- WQ -- -- 
+WP WP WP -- -- WP WP WP 
+WR WN WB -- WK WB WN WR 
+
+Side to play: BLACK
+
+Played d4d5
+
+
+exit
+
