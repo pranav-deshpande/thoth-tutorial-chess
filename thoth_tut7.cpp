@@ -1018,8 +1018,8 @@ void display_help() {
     std::cout << "List of available commands: \n\n";
     std::cout << "help: Display this help.\n";
     std::cout << "print: Print the board.\n";
-    std::cout << "think: Make the computer think for you, i.e. play the current move regardless of user/computer side."
-              << "Also works for a 2 player game. Can be used for hints.\n";
+    std::cout << "think: Make the computer think for you, i.e. play the current move regardless of user/computer side.\n"
+              << "       Also works for a 2 player game. Can be used for hints.\n";
     std::cout << "exit: End the game.\n" ;
     std::cout << "mode: Enter 'mode f' for 2 player mode and 'mode c' to play against the computer. Can be switched during play.\n";
     std::cout << "side: Enter 'side w' to 'side b' for white/black respectively. Can be switched during play.\n";
